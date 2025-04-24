@@ -3,29 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Electricity Bill Calculator - March 2025</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
       background-color: #f0f8ff;
-    }
-    input[type="number"] {
-      padding: 5px;
-      margin-bottom: 10px;
-      width: 120px;
-    }
-    button {
-      padding: 5px 10px;
-      margin-top: 10px;
-    }
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 18px;
-      background-color: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
     }
     .result p {
       margin: 6px 0;
@@ -34,27 +17,37 @@
 </head>
 <body>
 
-  <h2>Electricity Bill Calculator</h2>
-    
-  <label>Current Unit Reading:
-    <input type="number" id="currentUnit">
-  </label><br>
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Electricity Bill Calculator</h2>
 
-  <label>Previous Unit Reading:
-    <input type="number" id="previousUnit">
-  </label><br>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="currentUnit" class="form-label">Current Unit Reading:</label>
+        <input type="number" id="currentUnit" class="form-control">
+      </div>
+      <div class="col-md-6">
+        <label for="previousUnit" class="form-label">Previous Unit Reading:</label>
+        <input type="number" id="previousUnit" class="form-control">
+      </div>
+    </div>
 
-  <label>Demand Charge (৳):
-    <input type="number" id="demandcharge" value="84">
-  </label><br>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="demandcharge" class="form-label">Demand Charge (৳):</label>
+        <input type="number" id="demandcharge" class="form-control" value="84">
+      </div>
+      <div class="col-md-6">
+        <label for="chargePercent" class="form-label">Charge Percentage (%):</label>
+        <input type="number" id="chargePercent" class="form-control" value="5">
+      </div>
+    </div>
 
-  <label>Charge Percentage (%):
-    <input type="number" id="chargePercent" value="5">
-  </label><br>
+    <div class="text-center mb-4">
+      <button onclick="calculateBill()" class="btn btn-primary">Calculate</button>
+    </div>
 
-  <button onclick="calculateBill()">Calculate</button>
-
-  <div class="result" id="result"></div>
+    <div class="result shadow-sm bg-white p-4 rounded border" id="result"></div>
+  </div>
 
   <script>
     function calculateBill() {
@@ -64,7 +57,7 @@
       const chargePercent = parseFloat(document.getElementById('chargePercent').value);
 
       if (isNaN(prev) || isNaN(curr) || curr < prev) {
-        document.getElementById('result').innerHTML = `<p>Please enter valid unit readings.</p>`;
+        document.getElementById('result').innerHTML = `<div class="alert alert-danger">Please enter valid unit readings.</div>`;
         return;
       }
 
@@ -107,22 +100,10 @@
         bill6 = remaining * 14.61; // 601+
       }
 
-      //const totalBill = bill1 + bill2 + bill3 + bill4 + bill5 + bill6;
-      //const totalBillnDemand = totalBill + demandCharge;
-      //const vat = totalBillnDemand * (chargePercent / 100);
-      //const finalCost = totalBillnDemand + vat;
-        
-        //const totalBill = bill1 + bill2 + bill3 + bill4 + bill5 + bill6; 
-        //const totalBillnDemand = Math.ceil(totalBill + demandCharge);
-        //const vat = Math.ceil(totalBillnDemand * (chargePercent / 100));
-        //const finalCost = totalBillnDemand + vat;
-        
-
-        const totalBill = bill1 + bill2 + bill3 + bill4 + bill5 + bill6; 
-        const totalBillnDemand = Math.round(totalBill + demandCharge);
-        const vat = Math.ceil(totalBillnDemand * (chargePercent / 100));
-        const finalCost = totalBillnDemand + vat;
-
+      const totalBill = bill1 + bill2 + bill3 + bill4 + bill5 + bill6; 
+      const totalBillnDemand = Math.round(totalBill + demandCharge);
+      const vat = Math.ceil(totalBillnDemand * (chargePercent / 100));
+      const finalCost = totalBillnDemand + vat;
 
       document.getElementById('result').innerHTML = `
         <p>Total Used Units: <strong>${totalUnit}</strong></p>
@@ -137,7 +118,7 @@
         <p>+ Demand Charge: ৳${demandCharge.toFixed(2)}</p>
         <p>Subtotal: ৳${totalBillnDemand.toFixed(2)}</p>
         <p>+ ${chargePercent}% Additional Charge (VAT): ৳${vat.toFixed(2)}</p>
-        <p><strong>Final Total: ৳${finalCost.toFixed(2)}</strong></p>
+        <p class="text-success fs-5 mt-3"><strong>Final Total: ৳${finalCost.toFixed(2)}</strong></p>
       `;
     }
   </script>
