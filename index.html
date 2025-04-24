@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Electricity Bill Calculator - March 2025</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f8ff;
+    }
+    input[type="number"] {
+      padding: 5px;
+      margin-bottom: 10px;
+      width: 120px;
+    }
+    button {
+      padding: 5px 10px;
+      margin-top: 10px;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    .result p {
+      margin: 6px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Electricity Bill Calculator</h2>
+    
+  <label>Current Unit Reading:
+    <input type="number" id="currentUnit">
+  </label><br>
+
+  <label>Previous Unit Reading:
+    <input type="number" id="previousUnit">
+  </label><br>
+
+  <label>Demand Charge (৳):
+    <input type="number" id="demandcharge" value="84">
+  </label><br>
+
+  <label>Charge Percentage (%):
+    <input type="number" id="chargePercent" value="5">
+  </label><br>
+
+  <button onclick="calculateBill()">Calculate</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function calculateBill() {
+      const prev = parseFloat(document.getElementById('previousUnit').value);
+      const curr = parseFloat(document.getElementById('currentUnit').value);
+      const demandCharge = parseFloat(document.getElementById('demandcharge').value);
+      const chargePercent = parseFloat(document.getElementById('chargePercent').value);
+
+      if (isNaN(prev) || isNaN(curr) || curr < prev) {
+        document.getElementById('result').innerHTML = `<p>Please enter valid unit readings.</p>`;
+        return;
+      }
+
+      const totalUnit = curr - prev;
+
+      let remaining = totalUnit;
+      let bill1 = 0, bill2 = 0, bill3 = 0, bill4 = 0, bill5 = 0, bill6 = 0;
+
+      if (remaining > 0) {
+        const slab = Math.min(remaining, 75);
+        bill1 = slab * 5.26;
+        remaining -= slab;
+      }
+
+      if (remaining > 0) {
+        const slab = Math.min(remaining, 125); // 76-200 = 125 units
+        bill2 = slab * 7.20;
+        remaining -= slab;
+      }
+
+      if (remaining > 0) {
+        const slab = Math.min(remaining, 100); // 201-300 = 100 units
+        bill3 = slab * 7.59;
+        remaining -= slab;
+      }
+
+      if (remaining > 0) {
+        const slab = Math.min(remaining, 100); // 301-400 = 100 units
+        bill4 = slab * 8.02;
+        remaining -= slab;
+      }
+
+      if (remaining > 0) {
+        const slab = Math.min(remaining, 200); // 401-600 = 200 units
+        bill5 = slab * 12.67;
+        remaining -= slab;
+      }
+
+      if (remaining > 0) {
+        bill6 = remaining * 14.61; // 601+
+      }
+
+      //const totalBill = bill1 + bill2 + bill3 + bill4 + bill5 + bill6;
+      //const totalBillnDemand = totalBill + demandCharge;
+      //const vat = totalBillnDemand * (chargePercent / 100);
+      //const finalCost = totalBillnDemand + vat;
+        
+        //const totalBill = bill1 + bill2 + bill3 + bill4 + bill5 + bill6; 
+        //const totalBillnDemand = Math.ceil(totalBill + demandCharge);
+        //const vat = Math.ceil(totalBillnDemand * (chargePercent / 100));
+        //const finalCost = totalBillnDemand + vat;
+        
+
+        const totalBill = bill1 + bill2 + bill3 + bill4 + bill5 + bill6; 
+        const totalBillnDemand = Math.round(totalBill + demandCharge);
+        const vat = Math.ceil(totalBillnDemand * (chargePercent / 100));
+        const finalCost = totalBillnDemand + vat;
+
+
+      document.getElementById('result').innerHTML = `
+        <p>Total Used Units: <strong>${totalUnit}</strong></p>
+        <p>Bill for 0-75 units @5.26 = ৳${bill1.toFixed(2)}</p>
+        <p>Bill for 76-200 units @7.20 = ৳${bill2.toFixed(2)}</p>
+        <p>Bill for 201-300 units @7.59 = ৳${bill3.toFixed(2)}</p>
+        <p>Bill for 301-400 units @8.02 = ৳${bill4.toFixed(2)}</p>
+        <p>Bill for 401-600 units @12.67 = ৳${bill5.toFixed(2)}</p>
+        <p>Bill for 601+ units @14.61 = ৳${bill6.toFixed(2)}</p>
+        <hr>
+        <p>Unit Total: ৳${totalBill.toFixed(2)}</p>
+        <p>+ Demand Charge: ৳${demandCharge.toFixed(2)}</p>
+        <p>Subtotal: ৳${totalBillnDemand.toFixed(2)}</p>
+        <p>+ ${chargePercent}% Additional Charge (VAT): ৳${vat.toFixed(2)}</p>
+        <p><strong>Final Total: ৳${finalCost.toFixed(2)}</strong></p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
